@@ -1,20 +1,39 @@
+/**
+ * @module routes/index
+ * @description Routes principales de l'application : accueil, tableau de bord, réservations globales et documentation.
+ */
+
 const express = require('express');
 const router = express.Router();
 const { isAuthenticated } = require('../middlewares/auth');
 const reservationsService = require('../services/reservations');
 
-// GET / — page d'accueil
+/**
+ * @route GET /
+ * @description Page d'accueil avec formulaire de connexion.
+ * Affiche un message d'erreur si le paramètre `error` est présent dans l'URL.
+ * @access Public
+ */
 router.get('/', (req, res) => {
   const error = req.query.error || null;
   res.render('index', { error });
 });
 
-// GET /dashboard — tableau de bord (protégé)
+/**
+ * @route GET /dashboard
+ * @description Tableau de bord de l'utilisateur connecté.
+ * Contient tous les formulaires de gestion (catways, réservations, utilisateurs).
+ * @access Privé
+ */
 router.get('/dashboard', isAuthenticated, (req, res) => {
   res.render('dashboard', { user: req.user });
 });
 
-// GET /reservations — liste de toutes les réservations (protégé)
+/**
+ * @route GET /reservations
+ * @description Liste l'ensemble des réservations toutes ressources confondues.
+ * @access Privé
+ */
 router.get('/reservations', isAuthenticated, async (req, res) => {
   try {
     const reservations = await reservationsService.getAll();
@@ -24,7 +43,11 @@ router.get('/reservations', isAuthenticated, async (req, res) => {
   }
 });
 
-// GET /docs — documentation de l'API
+/**
+ * @route GET /docs
+ * @description Page de documentation de l'API (vue d'ensemble, tutoriel, exemples, glossaire).
+ * @access Privé
+ */
 router.get('/docs', isAuthenticated, (req, res) => {
   res.render('docs', { user: req.user });
 });

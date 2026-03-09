@@ -1,5 +1,18 @@
+/**
+ * @module models/catway
+ * @description Modèle Mongoose représentant un catway (appontement) du port.
+ */
+
 const mongoose = require('mongoose');
 
+/**
+ * @typedef {Object} Catway
+ * @property {number} catwayNumber - Numéro unique identifiant le catway
+ * @property {string} catwayType - Type du catway : "long" ou "short"
+ * @property {string} catwayState - Description de l'état actuel du catway
+ * @property {Date} createdAt - Date de création (auto)
+ * @property {Date} updatedAt - Date de dernière modification (auto)
+ */
 const catwaySchema = new mongoose.Schema({
   catwayNumber: {
     type: Number,

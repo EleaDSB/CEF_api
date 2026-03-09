@@ -1,9 +1,22 @@
+/**
+ * @module routes/users
+ * @description Routes CRUD pour la gestion des comptes utilisateurs.
+ * Toutes les routes sont protégées par le middleware isAuthenticated.
+ */
+
 const express = require('express');
 const router = express.Router();
 const usersService = require('../services/users');
 const { isAuthenticated } = require('../middlewares/auth');
 
-// POST /users — créer un utilisateur
+/**
+ * @route POST /users
+ * @description Crée un nouvel utilisateur. Le mot de passe est hashé automatiquement.
+ * @body {string} name - Nom de l'utilisateur
+ * @body {string} email - Adresse email (unique)
+ * @body {string} password - Mot de passe (min. 6 caractères)
+ * @access Privé
+ */
 router.post('/', isAuthenticated, async (req, res) => {
   try {
     await usersService.create(req.body);
@@ -13,7 +26,13 @@ router.post('/', isAuthenticated, async (req, res) => {
   }
 });
 
-// PUT /users/:id — modifier un utilisateur
+/**
+ * @route PUT /users/:id
+ * @description Met à jour les informations d'un utilisateur.
+ * Si le mot de passe est modifié, il est re-hashé via le hook bcrypt.
+ * @param {string} id - Identifiant MongoDB de l'utilisateur
+ * @access Privé
+ */
 router.put('/:id', isAuthenticated, async (req, res) => {
   try {
     await usersService.update(req.params.id, req.body);
@@ -23,7 +42,12 @@ router.put('/:id', isAuthenticated, async (req, res) => {
   }
 });
 
-// DELETE /users/:id — supprimer un utilisateur
+/**
+ * @route DELETE /users/:id
+ * @description Supprime un utilisateur par son identifiant.
+ * @param {string} id - Identifiant MongoDB de l'utilisateur
+ * @access Privé
+ */
 router.delete('/:id', isAuthenticated, async (req, res) => {
   try {
     await usersService.remove(req.params.id);

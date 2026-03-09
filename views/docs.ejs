@@ -1,0 +1,110 @@
+<%- include('partials/header', { title: 'Documentation', user }) %>
+
+  <h2>Documentation de l'API</h2>
+  <a href="/dashboard" class="btn">← Retour</a>
+
+  <!-- VUE D'ENSEMBLE -->
+  <section class="card">
+    <h3>Vue d'ensemble</h3>
+    <p>L'API du Port de Plaisance Russell est une API REST privée permettant à la capitainerie de gérer les catways (appontements) et les réservations. Toutes les routes (sauf la connexion) nécessitent une authentification.</p>
+    <p><strong>Base URL :</strong> <code>/</code></p>
+    <p><strong>Format :</strong> JSON / HTML (vues EJS)</p>
+    <p><strong>Authentification :</strong> Session JWT — connexion via <code>POST /auth/login</code></p>
+  </section>
+
+  <!-- TUTORIEL -->
+  <section class="card">
+    <h3>Tutoriel</h3>
+    <ol>
+      <li>Connectez-vous via le formulaire sur la page d'accueil (<code>GET /</code>).</li>
+      <li>Une fois connecté, vous êtes redirigé vers votre tableau de bord (<code>GET /dashboard</code>).</li>
+      <li>Depuis le tableau de bord, vous pouvez gérer les catways et les réservations.</li>
+      <li>Pour vous déconnecter, cliquez sur "Déconnexion" (<code>GET /auth/logout</code>).</li>
+    </ol>
+  </section>
+
+  <!-- ROUTES -->
+  <section class="card">
+    <h3>Exemples de routes</h3>
+
+    <h4>Authentification</h4>
+    <table>
+      <thead><tr><th>Méthode</th><th>Route</th><th>Description</th><th>Auth</th></tr></thead>
+      <tbody>
+        <tr><td>POST</td><td>/auth/login</td><td>Connexion utilisateur</td><td>Non</td></tr>
+        <tr><td>GET</td><td>/auth/logout</td><td>Déconnexion</td><td>Oui</td></tr>
+      </tbody>
+    </table>
+
+    <h4>Catways</h4>
+    <table>
+      <thead><tr><th>Méthode</th><th>Route</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td>GET</td><td>/catways</td><td>Liste tous les catways</td></tr>
+        <tr><td>GET</td><td>/catways/:id</td><td>Détails d'un catway</td></tr>
+        <tr><td>POST</td><td>/catways</td><td>Créer un catway</td></tr>
+        <tr><td>PUT</td><td>/catways/:id</td><td>Remplacer un catway</td></tr>
+        <tr><td>PATCH</td><td>/catways/:id</td><td>Modifier l'état d'un catway</td></tr>
+        <tr><td>DELETE</td><td>/catways/:id</td><td>Supprimer un catway</td></tr>
+      </tbody>
+    </table>
+
+    <h4>Réservations</h4>
+    <table>
+      <thead><tr><th>Méthode</th><th>Route</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td>GET</td><td>/catways/:id/reservations</td><td>Liste les réservations d'un catway</td></tr>
+        <tr><td>GET</td><td>/catways/:id/reservations/:idReservation</td><td>Détails d'une réservation</td></tr>
+        <tr><td>POST</td><td>/catways/:id/reservations</td><td>Créer une réservation</td></tr>
+        <tr><td>DELETE</td><td>/catways/:id/reservations/:idReservation</td><td>Supprimer une réservation</td></tr>
+      </tbody>
+    </table>
+
+    <h4>Utilisateurs</h4>
+    <table>
+      <thead><tr><th>Méthode</th><th>Route</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td>POST</td><td>/users</td><td>Créer un utilisateur</td></tr>
+        <tr><td>PUT</td><td>/users/:id</td><td>Modifier un utilisateur</td></tr>
+        <tr><td>DELETE</td><td>/users/:id</td><td>Supprimer un utilisateur</td></tr>
+      </tbody>
+    </table>
+
+    <h4>Exemple de corps de requête — Créer un catway</h4>
+    <pre><code>{
+  "catwayNumber": 25,
+  "catwayType": "short",
+  "catwayState": "bon état"
+}</code></pre>
+
+    <h4>Exemple de corps de requête — Créer une réservation</h4>
+    <pre><code>{
+  "clientName": "Jean Dupont",
+  "boatName": "La Belle",
+  "checkIn": "2025-06-01",
+  "checkOut": "2025-06-15"
+}</code></pre>
+  </section>
+
+  <!-- GLOSSAIRE -->
+  <section class="card">
+    <h3>Glossaire</h3>
+    <dl>
+      <dt>Catway</dt>
+      <dd>Petit appontement permettant d'amarrer un bateau dans le port.</dd>
+      <dt>catwayNumber</dt>
+      <dd>Numéro unique identifiant un catway.</dd>
+      <dt>catwayType</dt>
+      <dd>Type du catway : <code>short</code> (court) ou <code>long</code>.</dd>
+      <dt>catwayState</dt>
+      <dd>Description textuelle de l'état du catway.</dd>
+      <dt>checkIn</dt>
+      <dd>Date de début de la réservation (arrivée du bateau).</dd>
+      <dt>checkOut</dt>
+      <dd>Date de fin de la réservation (départ du bateau).</dd>
+      <dt>JWT</dt>
+      <dd>JSON Web Token — jeton sécurisé utilisé pour authentifier les requêtes.</dd>
+    </dl>
+  </section>
+
+<%- include('partials/footer') %>

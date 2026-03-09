@@ -1,0 +1,15 @@
+<%- include('partials/header', { title: 'Catway ' + catway.catwayNumber, user }) %>
+
+  <h2>Détails du catway n°<%= catway.catwayNumber %></h2>
+  <a href="/catways" class="btn">← Retour</a>
+
+  <section class="card">
+    <p><strong>ID :</strong> <%= catway._id %></p>
+    <p><strong>Numéro :</strong> <%= catway.catwayNumber %></p>
+    <p><strong>Type :</strong> <%= catway.catwayType %></p>
+    <p><strong>État :</strong> <%= catway.catwayState %></p>
+  </section>
+
+  <a href="/catways/<%= catway._id %>/reservations" class="btn">Voir les réservations</a>
+
+<%- include('partials/footer') %>

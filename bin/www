@@ -1,68 +1,48 @@
 #!/usr/bin/env node
+require('dotenv').config();
 
-/**
- * Module dependencies.
- */
+const app = require('../app');
+const debug = require('debug')('api:server');
+const http = require('http');
+const Mocha = require('mocha');
+const path = require('path');
+const mongoose = require('mongoose');
 
-var app = require('../app');
-var debug = require('debug')('api:server');
-var http = require('http');
-
-/**
- * Get port from environment and store in Express.
- */
-
-var port = normalizePort(process.env.PORT || '3000');
+const port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
 
-/**
- * Create HTTP server.
- */
+const server = http.createServer(app);
 
-var server = http.createServer(app);
+// Lance les tests Mocha puis démarre le serveur
+mongoose.connection.once('open', () => {
+  const mocha = new Mocha({ timeout: 10000 });
+  mocha.addFile(path.join(__dirname, '../tests/api.test.js'));
 
-/**
- * Listen on provided port, on all network interfaces.
- */
+  console.log('\n--- Lancement des tests ---\n');
 
-server.listen(port);
-server.on('error', onError);
-server.on('listening', onListening);
-
-/**
- * Normalize a port into a number, string, or false.
- */
+  mocha.run((failures) => {
+    if (failures) {
+      console.warn(`\n⚠️  ${failures} test(s) en échec\n`);
+    } else {
+      console.log('\n✓ Tous les tests sont passés\n');
+    }
+    console.log('--- Démarrage du serveur ---\n');
+    server.listen(port);
+    server.on('error', onError);
+    server.on('listening', onListening);
+  });
+});
 
 function normalizePort(val) {
-  var port = parseInt(val, 10);
-
-  if (isNaN(port)) {
-    // named pipe
-    return val;
-  }
-
-  if (port >= 0) {
-    // port number
-    return port;
-  }
-
+  const port = parseInt(val, 10);
+  if (isNaN(port)) return val;
+  if (port >= 0) return port;
   return false;
 }
 
-/**
- * Event listener for HTTP server "error" event.
- */
-
 function onError(error) {
-  if (error.syscall !== 'listen') {
-    throw error;
-  }
-
-  var bind = typeof port === 'string'
-    ? 'Pipe ' + port
-    : 'Port ' + port;
-
-  // handle specific listen errors with friendly messages
+  if (error.syscall !== 'listen') throw error;
+  const bind = typeof port === 'string' ? 'Pipe ' + port : 'Port ' + port;
   switch (error.code) {
     case 'EACCES':
       console.error(bind + ' requires elevated privileges');
@@ -77,14 +57,9 @@ function onError(error) {
   }
 }
 
-/**
- * Event listener for HTTP server "listening" event.
- */
-
 function onListening() {
-  var addr = server.address();
-  var bind = typeof addr === 'string'
-    ? 'pipe ' + addr
-    : 'port ' + addr.port;
+  const addr = server.address();
+  const bind = typeof addr === 'string' ? 'pipe ' + addr : 'port ' + addr.port;
+  console.log('Serveur en écoute sur le ' + bind);
   debug('Listening on ' + bind);
 }

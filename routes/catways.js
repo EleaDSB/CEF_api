@@ -64,26 +64,48 @@ router.delete('/:id', isAuthenticated, async (req, res) => {
   }
 });
 
-// --- Sous-routes réservations (seront complétées étape 5) ---
+// --- Sous-routes réservations ---
 
-// GET /catways/:id/reservations
+// GET /catways/:id/reservations — liste les réservations d'un catway
 router.get('/:id/reservations', isAuthenticated, async (req, res) => {
-  res.json({ message: 'À implémenter étape 5' });
+  try {
+    const catway = await catwaysService.getById(req.params.id);
+    const reservations = await reservationsService.getAllByCatway(catway.catwayNumber);
+    res.render('reservations', { reservations, user: req.user });
+  } catch (err) {
+    res.status(404).json({ message: err.message });
+  }
 });
 
-// GET /catways/:id/reservations/:idReservation
+// GET /catways/:id/reservations/:idReservation — détails d'une réservation
 router.get('/:id/reservations/:idReservation', isAuthenticated, async (req, res) => {
-  res.json({ message: 'À implémenter étape 5' });
+  try {
+    const reservation = await reservationsService.getById(req.params.idReservation);
+    res.render('reservation', { reservation, user: req.user });
+  } catch (err) {
+    res.status(404).json({ message: err.message });
+  }
 });
 
-// POST /catways/:id/reservations
+// POST /catways/:id/reservations — créer une réservation
 router.post('/:id/reservations', isAuthenticated, async (req, res) => {
-  res.json({ message: 'À implémenter étape 5' });
+  try {
+    const catway = await catwaysService.getById(req.params.id);
+    await reservationsService.create(catway.catwayNumber, req.body);
+    res.redirect('/dashboard');
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
 });
 
-// DELETE /catways/:id/reservations/:idReservation
+// DELETE /catways/:id/reservations/:idReservation — supprimer une réservation
 router.delete('/:id/reservations/:idReservation', isAuthenticated, async (req, res) => {
-  res.json({ message: 'À implémenter étape 5' });
+  try {
+    await reservationsService.remove(req.params.idReservation);
+    res.redirect('/dashboard');
+  } catch (err) {
+    res.status(404).json({ message: err.message });
+  }
 });
 
 module.exports = router;

@@ -41,7 +41,7 @@ const replace = async (id, data) => {
   const catway = await Catway.findByIdAndUpdate(
     id,
     { catwayNumber: data.catwayNumber, catwayType: data.catwayType, catwayState: data.catwayState },
-    { new: true, runValidators: true, overwrite: true }
+    { returnDocument: 'after', runValidators: true, overwrite: true }
   );
   if (!catway) throw new Error('Catway non trouvé');
   return catway;
@@ -58,7 +58,7 @@ const update = async (id, data) => {
   const catway = await Catway.findByIdAndUpdate(
     id,
     data,
-    { new: true, runValidators: true }
+    { returnDocument: 'after', runValidators: true }
   );
   if (!catway) throw new Error('Catway non trouvé');
   return catway;

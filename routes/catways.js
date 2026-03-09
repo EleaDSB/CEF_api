@@ -1,10 +1,20 @@
+/**
+ * @module routes/catways
+ * @description Routes CRUD pour la ressource Catway et ses sous-ressources Réservation.
+ * Toutes les routes sont protégées par le middleware isAuthenticated.
+ */
+
 const express = require('express');
 const router = express.Router();
 const catwaysService = require('../services/catways');
 const reservationsService = require('../services/reservations');
 const { isAuthenticated } = require('../middlewares/auth');
 
-// GET /catways — liste tous les catways
+/**
+ * @route GET /catways
+ * @description Retourne la liste de tous les catways.
+ * @access Privé
+ */
 router.get('/', isAuthenticated, async (req, res) => {
   try {
     const catways = await catwaysService.getAll();
@@ -14,7 +24,12 @@ router.get('/', isAuthenticated, async (req, res) => {
   }
 });
 
-// GET /catways/:id — détails d'un catway
+/**
+ * @route GET /catways/:id
+ * @description Retourne les détails d'un catway par son identifiant.
+ * @param {string} id - Identifiant MongoDB du catway
+ * @access Privé
+ */
 router.get('/:id', isAuthenticated, async (req, res) => {
   try {
     const catway = await catwaysService.getById(req.params.id);
@@ -24,7 +39,14 @@ router.get('/:id', isAuthenticated, async (req, res) => {
   }
 });
 
-// POST /catways — créer un catway
+/**
+ * @route POST /catways
+ * @description Crée un nouveau catway.
+ * @body {number} catwayNumber - Numéro du catway
+ * @body {string} catwayType - Type : "long" ou "short"
+ * @body {string} catwayState - Description de l'état
+ * @access Privé
+ */
 router.post('/', isAuthenticated, async (req, res) => {
   try {
     await catwaysService.create(req.body);
@@ -34,7 +56,12 @@ router.post('/', isAuthenticated, async (req, res) => {
   }
 });
 
-// PUT /catways/:id — remplacer un catway
+/**
+ * @route PUT /catways/:id
+ * @description Remplace entièrement un catway existant.
+ * @param {string} id - Identifiant MongoDB du catway
+ * @access Privé
+ */
 router.put('/:id', isAuthenticated, async (req, res) => {
   try {
     const catway = await catwaysService.replace(req.params.id, req.body);
@@ -44,17 +71,28 @@ router.put('/:id', isAuthenticated, async (req, res) => {
   }
 });
 
-// PATCH /catways/:id — modifier partiellement un catway
+/**
+ * @route PATCH /catways/:id
+ * @description Modifie partiellement un catway (ex: mise à jour de l'état).
+ * @param {string} id - Identifiant MongoDB du catway
+ * @body {string} catwayState - Nouveau état du catway
+ * @access Privé
+ */
 router.patch('/:id', isAuthenticated, async (req, res) => {
   try {
-    const catway = await catwaysService.update(req.params.id, req.body);
+    await catwaysService.update(req.params.id, req.body);
     res.redirect('/dashboard');
   } catch (err) {
     res.status(404).json({ message: err.message });
   }
 });
 
-// DELETE /catways/:id — supprimer un catway
+/**
+ * @route DELETE /catways/:id
+ * @description Supprime un catway par son identifiant.
+ * @param {string} id - Identifiant MongoDB du catway
+ * @access Privé
+ */
 router.delete('/:id', isAuthenticated, async (req, res) => {
   try {
     await catwaysService.remove(req.params.id);
@@ -64,9 +102,14 @@ router.delete('/:id', isAuthenticated, async (req, res) => {
   }
 });
 
-// --- Sous-routes réservations ---
+// ─── Sous-routes Réservations ─────────────────────────────────────────────────
 
-// GET /catways/:id/reservations — liste les réservations d'un catway
+/**
+ * @route GET /catways/:id/reservations
+ * @description Liste toutes les réservations d'un catway donné.
+ * @param {string} id - Identifiant MongoDB du catway
+ * @access Privé
+ */
 router.get('/:id/reservations', isAuthenticated, async (req, res) => {
   try {
     const catway = await catwaysService.getById(req.params.id);
@@ -77,7 +120,13 @@ router.get('/:id/reservations', isAuthenticated, async (req, res) => {
   }
 });
 
-// GET /catways/:id/reservations/:idReservation — détails d'une réservation
+/**
+ * @route GET /catways/:id/reservations/:idReservation
+ * @description Retourne les détails d'une réservation spécifique.
+ * @param {string} id - Identifiant MongoDB du catway
+ * @param {string} idReservation - Identifiant MongoDB de la réservation
+ * @access Privé
+ */
 router.get('/:id/reservations/:idReservation', isAuthenticated, async (req, res) => {
   try {
     const reservation = await reservationsService.getById(req.params.idReservation);
@@ -87,7 +136,16 @@ router.get('/:id/reservations/:idReservation', isAuthenticated, async (req, res)
   }
 });
 
-// POST /catways/:id/reservations — créer une réservation
+/**
+ * @route POST /catways/:id/reservations
+ * @description Crée une réservation pour un catway.
+ * @param {string} id - Identifiant MongoDB du catway
+ * @body {string} clientName - Nom du client
+ * @body {string} boatName - Nom du bateau
+ * @body {Date} checkIn - Date d'arrivée
+ * @body {Date} checkOut - Date de départ
+ * @access Privé
+ */
 router.post('/:id/reservations', isAuthenticated, async (req, res) => {
   try {
     const catway = await catwaysService.getById(req.params.id);
@@ -98,7 +156,13 @@ router.post('/:id/reservations', isAuthenticated, async (req, res) => {
   }
 });
 
-// DELETE /catways/:id/reservations/:idReservation — supprimer une réservation
+/**
+ * @route DELETE /catways/:id/reservations/:idReservation
+ * @description Supprime une réservation par son identifiant.
+ * @param {string} id - Identifiant MongoDB du catway
+ * @param {string} idReservation - Identifiant MongoDB de la réservation
+ * @access Privé
+ */
 router.delete('/:id/reservations/:idReservation', isAuthenticated, async (req, res) => {
   try {
     await reservationsService.remove(req.params.idReservation);

@@ -1,6 +1,19 @@
+/**
+ * @module models/user
+ * @description Modèle Mongoose représentant un utilisateur de la capitainerie.
+ */
+
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 
+/**
+ * @typedef {Object} User
+ * @property {string} name - Nom complet de l'utilisateur
+ * @property {string} email - Adresse email unique (mise en minuscules)
+ * @property {string} password - Mot de passe hashé (bcrypt, min. 6 caractères)
+ * @property {Date} createdAt - Date de création (auto)
+ * @property {Date} updatedAt - Date de dernière modification (auto)
+ */
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -22,7 +35,10 @@ const userSchema = new mongoose.Schema({
   }
 }, { timestamps: true });
 
-// Hash du mot de passe avant sauvegarde
+/**
+ * Hook pre-save : hash automatique du mot de passe si modifié.
+ * Utilise bcrypt avec un facteur de coût de 10.
+ */
 userSchema.pre('save', async function () {
   if (!this.isModified('password')) return;
   this.password = await bcrypt.hash(this.password, 10);

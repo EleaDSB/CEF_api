@@ -1,3 +1,9 @@
+/**
+ * @file app.js
+ * @description Point d'entrée principal de l'application Express.
+ * Configure les middlewares, la connexion MongoDB et les routes.
+ */
+
 require('dotenv').config();
 
 const express = require('express');

@@ -1,8 +1,20 @@
+/**
+ * @module routes/auth
+ * @description Routes d'authentification : connexion et déconnexion.
+ */
+
 const express = require('express');
 const router = express.Router();
 const authService = require('../services/auth');
 
-// POST /auth/login — connexion utilisateur
+/**
+ * @route POST /auth/login
+ * @description Authentifie un utilisateur et stocke le JWT en session.
+ * Redirige vers /dashboard si succès, vers / avec message d'erreur sinon.
+ * @body {string} email - Adresse email de l'utilisateur
+ * @body {string} password - Mot de passe de l'utilisateur
+ * @access Public
+ */
 router.post('/login', async (req, res) => {
   const { email, password } = req.body;
 
@@ -15,7 +27,11 @@ router.post('/login', async (req, res) => {
   }
 });
 
-// GET /auth/logout — déconnexion
+/**
+ * @route GET /auth/logout
+ * @description Détruit la session et redirige vers la page d'accueil.
+ * @access Public
+ */
 router.get('/logout', (req, res) => {
   req.session.destroy();
   res.redirect('/');

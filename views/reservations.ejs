@@ -1,0 +1,33 @@
+<%- include('partials/header', { title: 'Réservations', user }) %>
+
+  <h2>Liste des réservations</h2>
+  <a href="/dashboard" class="btn">← Retour</a>
+
+  <% if (reservations.length === 0) { %>
+    <p>Aucune réservation trouvée.</p>
+  <% } else { %>
+    <table>
+      <thead>
+        <tr>
+          <th>Catway n°</th>
+          <th>Client</th>
+          <th>Bateau</th>
+          <th>Arrivée</th>
+          <th>Départ</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% reservations.forEach(r => { %>
+          <tr>
+            <td><%= r.catwayNumber %></td>
+            <td><%= r.clientName %></td>
+            <td><%= r.boatName %></td>
+            <td><%= new Date(r.checkIn).toLocaleDateString('fr-FR') %></td>
+            <td><%= new Date(r.checkOut).toLocaleDateString('fr-FR') %></td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  <% } %>
+
+<%- include('partials/footer') %>

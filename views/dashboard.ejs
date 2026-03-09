@@ -1,0 +1,154 @@
+<%- include('partials/header', { title: 'Tableau de bord', user }) %>
+
+  <h2>Tableau de bord — Bienvenue, <%= user.name %></h2>
+
+  <div class="dashboard-grid">
+
+    <!-- UTILISATEURS -->
+    <section class="card">
+      <h3>Utilisateurs</h3>
+
+      <h4>Créer un utilisateur</h4>
+      <form action="/users" method="POST">
+        <input type="text" name="name" placeholder="Nom" required>
+        <input type="email" name="email" placeholder="Email" required>
+        <input type="password" name="password" placeholder="Mot de passe" required>
+        <button type="submit" class="btn">Créer</button>
+      </form>
+
+      <h4>Modifier un utilisateur</h4>
+      <form action="" method="POST" id="form-update-user" onsubmit="setUserAction(this)">
+        <input type="hidden" name="_method" value="PUT">
+        <input type="text" name="userId" placeholder="ID utilisateur" required id="update-user-id">
+        <input type="text" name="name" placeholder="Nouveau nom">
+        <input type="email" name="email" placeholder="Nouvel email">
+        <input type="password" name="password" placeholder="Nouveau mot de passe">
+        <button type="submit" class="btn">Modifier</button>
+      </form>
+
+      <h4>Supprimer un utilisateur</h4>
+      <form action="" method="POST" id="form-delete-user" onsubmit="setDeleteUserAction(this)">
+        <input type="hidden" name="_method" value="DELETE">
+        <input type="text" name="userId" placeholder="ID utilisateur" required id="delete-user-id">
+        <button type="submit" class="btn btn-danger">Supprimer</button>
+      </form>
+    </section>
+
+    <!-- CATWAYS -->
+    <section class="card">
+      <h3>Catways</h3>
+
+      <h4>Créer un catway</h4>
+      <form action="/catways" method="POST">
+        <input type="number" name="catwayNumber" placeholder="Numéro" required>
+        <select name="catwayType" required>
+          <option value="">-- Type --</option>
+          <option value="short">Short</option>
+          <option value="long">Long</option>
+        </select>
+        <input type="text" name="catwayState" placeholder="État" required>
+        <button type="submit" class="btn">Créer</button>
+      </form>
+
+      <h4>Modifier l'état d'un catway</h4>
+      <form action="" method="POST" id="form-patch-catway" onsubmit="setPatchCatwayAction(this)">
+        <input type="hidden" name="_method" value="PATCH">
+        <input type="text" name="catwayId" placeholder="ID catway" required id="patch-catway-id">
+        <input type="text" name="catwayState" placeholder="Nouvel état" required>
+        <button type="submit" class="btn">Modifier</button>
+      </form>
+
+      <h4>Supprimer un catway</h4>
+      <form action="" method="POST" id="form-delete-catway" onsubmit="setDeleteCatwayAction(this)">
+        <input type="hidden" name="_method" value="DELETE">
+        <input type="text" name="catwayId" placeholder="ID catway" required id="delete-catway-id">
+        <button type="submit" class="btn btn-danger">Supprimer</button>
+      </form>
+
+      <h4>Afficher les détails d'un catway</h4>
+      <form action="" method="GET" id="form-get-catway" onsubmit="getDetailsCatway(event)">
+        <input type="text" name="catwayId" placeholder="ID catway" required id="get-catway-id">
+        <button type="submit" class="btn">Afficher</button>
+      </form>
+
+      <div class="links">
+        <a href="/catways" class="btn">Liste des catways</a>
+      </div>
+    </section>
+
+    <!-- RÉSERVATIONS -->
+    <section class="card">
+      <h3>Réservations</h3>
+
+      <h4>Enregistrer une réservation</h4>
+      <form action="" method="POST" id="form-create-resa" onsubmit="setCreateResaAction(this)">
+        <input type="text" name="catwayId" placeholder="ID catway" required id="create-resa-catway-id">
+        <input type="text" name="clientName" placeholder="Nom du client" required>
+        <input type="text" name="boatName" placeholder="Nom du bateau" required>
+        <input type="date" name="checkIn" required>
+        <input type="date" name="checkOut" required>
+        <button type="submit" class="btn">Réserver</button>
+      </form>
+
+      <h4>Supprimer une réservation</h4>
+      <form action="" method="POST" id="form-delete-resa" onsubmit="setDeleteResaAction(this)">
+        <input type="hidden" name="_method" value="DELETE">
+        <input type="text" name="catwayId" placeholder="ID catway" required id="delete-resa-catway-id">
+        <input type="text" name="resaId" placeholder="ID réservation" required id="delete-resa-id">
+        <button type="submit" class="btn btn-danger">Supprimer</button>
+      </form>
+
+      <h4>Afficher les détails d'une réservation</h4>
+      <form action="" method="GET" id="form-get-resa" onsubmit="getDetailsResa(event)">
+        <input type="text" name="catwayId" placeholder="ID catway" required id="get-resa-catway-id">
+        <input type="text" name="resaId" placeholder="ID réservation" required id="get-resa-id">
+        <button type="submit" class="btn">Afficher</button>
+      </form>
+
+      <div class="links">
+        <a href="/reservations" class="btn">Liste des réservations</a>
+      </div>
+    </section>
+
+  </div>
+
+  <script>
+    function setUserAction(form) {
+      const id = document.getElementById('update-user-id').value;
+      form.action = '/users/' + id;
+    }
+    function setDeleteUserAction(form) {
+      const id = document.getElementById('delete-user-id').value;
+      form.action = '/users/' + id;
+    }
+    function setPatchCatwayAction(form) {
+      const id = document.getElementById('patch-catway-id').value;
+      form.action = '/catways/' + id;
+    }
+    function setDeleteCatwayAction(form) {
+      const id = document.getElementById('delete-catway-id').value;
+      form.action = '/catways/' + id;
+    }
+    function getDetailsCatway(e) {
+      e.preventDefault();
+      const id = document.getElementById('get-catway-id').value;
+      window.location.href = '/catways/' + id;
+    }
+    function setCreateResaAction(form) {
+      const id = document.getElementById('create-resa-catway-id').value;
+      form.action = '/catways/' + id + '/reservations';
+    }
+    function setDeleteResaAction(form) {
+      const catwayId = document.getElementById('delete-resa-catway-id').value;
+      const resaId = document.getElementById('delete-resa-id').value;
+      form.action = '/catways/' + catwayId + '/reservations/' + resaId;
+    }
+    function getDetailsResa(e) {
+      e.preventDefault();
+      const catwayId = document.getElementById('get-resa-catway-id').value;
+      const resaId = document.getElementById('get-resa-id').value;
+      window.location.href = '/catways/' + catwayId + '/reservations/' + resaId;
+    }
+  </script>
+
+<%- include('partials/footer') %>

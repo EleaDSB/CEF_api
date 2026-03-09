@@ -6,6 +6,7 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const session = require('express-session');
 const mongoose = require('mongoose');
+const methodOverride = require('method-override');
 
 const indexRouter = require('./routes/index');
 const authRouter = require('./routes/auth');
@@ -35,6 +36,7 @@ app.use(session({
   saveUninitialized: false,
   cookie: { secure: false }
 }));
+app.use(methodOverride('_method'));
 
 // Routes
 app.use('/', indexRouter);

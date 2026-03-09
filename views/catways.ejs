@@ -1,0 +1,27 @@
+<%- include('partials/header', { title: 'Catways', user }) %>
+
+  <h2>Liste des catways</h2>
+  <a href="/dashboard" class="btn">← Retour</a>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Numéro</th>
+        <th>Type</th>
+        <th>État</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% catways.forEach(catway => { %>
+        <tr>
+          <td><%= catway.catwayNumber %></td>
+          <td><%= catway.catwayType %></td>
+          <td><%= catway.catwayState %></td>
+          <td><a href="/catways/<%= catway._id %>">Détails</a></td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+
+<%- include('partials/footer') %>

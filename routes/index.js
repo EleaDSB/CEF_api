@@ -46,10 +46,11 @@ router.get('/reservations', isAuthenticated, async (req, res) => {
 /**
  * @route GET /docs
  * @description Page de documentation de l'API (vue d'ensemble, tutoriel, exemples, glossaire).
- * @access Privé
+ * @access Public
  */
-router.get('/docs', isAuthenticated, (req, res) => {
-  res.render('docs', { user: req.user });
+router.get('/docs', (req, res) => {
+  const user = req.session?.token ? req.user : null;
+  res.render('docs', { user });
 });
 
 module.exports = router;

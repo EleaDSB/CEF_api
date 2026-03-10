@@ -54,4 +54,4 @@ npm test     # Tests unitaires Mocha
 
 ## Application hébergée
 
-🔗 Lien de déploiement : *(à ajouter après déploiement Railway)*
+🔗 [https://cefapi-production.up.railway.app](https://cefapi-production.up.railway.app)
